@@ -217,19 +217,28 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 </div>
 
 <div class="screen" id="screen-done">
-  <div class="step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div></div>
+  <div class="step-indicator" id="staff-trigger" style="cursor:default"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div></div>
   <div class="card">
     <div class="complete-icon">✓</div>
     <h2 style="text-align:center;border:none">同意ありがとうございました</h2>
-    <p class="lead" style="text-align:center">「同意書を印刷」ボタンを押して、印刷された用紙をスタッフにお渡しください。<br>その後、ツボに円皮鍼を貼ります。</p>
+    <p class="lead" style="text-align:center">iPadをスタッフにお渡しして、待合でお待ちください。<br>準備ができましたらお呼びいたします。</p>
     <div style="background:#f5f1ea;border-radius:10px;padding:16px;margin-top:16px">
       <div style="font-weight:600;color:#5a3a1a;margin-bottom:8px">スタッフ確認用</div>
       <div id="done-summary" style="font-size:15px;line-height:1.8"></div>
     </div>
   </div>
-  <button class="btn btn-primary" onclick="printConsent()">同意書を印刷</button>
-  <button class="btn btn-secondary" onclick="showConsentDoc()">画面で同意書を表示</button>
-  <button class="btn btn-back" onclick="reset()" style="margin-top:8px">最初に戻る</button>
+  <button class="btn btn-primary" onclick="showConsentDoc()">画面で同意書を表示</button>
+  <button class="btn btn-secondary" onclick="reset()">最初に戻る</button>
+</div>
+
+<!-- スタッフ用隠しメニュー（画面上部を2秒長押しで表示） -->
+<div id="staff-menu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:20px;max-width:340px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
+    <div style="text-align:center;font-weight:700;color:#5a3a1a;font-size:17px;margin-bottom:14px">スタッフメニュー</div>
+    <button class="btn btn-primary" onclick="closeStaffMenu();printConsent()">同意書を印刷</button>
+    <button class="btn btn-secondary" onclick="closeStaffMenu();showConsentDoc()">画面で同意書を表示</button>
+    <button class="btn btn-back" onclick="closeStaffMenu()" style="margin-top:8px">閉じる</button>
+  </div>
 </div>
 
 <!-- 同意書プレビュー画面（印刷ボタンが効かない時のフォールバック） -->
@@ -544,7 +553,36 @@ function reset(){
   go('intro');
 }
 
+// スタッフメニュー：完了画面のステップインジケーター部分を2秒長押しで表示
+function setupStaffTrigger(){
+  const trigger = document.getElementById('staff-trigger');
+  if(!trigger) return;
+  let pressTimer = null;
+  const start = (e) => {
+    pressTimer = setTimeout(() => {
+      openStaffMenu();
+      pressTimer = null;
+    }, 2000);
+  };
+  const cancel = () => {
+    if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+  };
+  trigger.addEventListener('touchstart', start, {passive:true});
+  trigger.addEventListener('touchend', cancel);
+  trigger.addEventListener('touchcancel', cancel);
+  trigger.addEventListener('mousedown', start);
+  trigger.addEventListener('mouseup', cancel);
+  trigger.addEventListener('mouseleave', cancel);
+}
+function openStaffMenu(){
+  document.getElementById('staff-menu').style.display = 'flex';
+}
+function closeStaffMenu(){
+  document.getElementById('staff-menu').style.display = 'none';
+}
+
 renderSymptomGrid();
+setupStaffTrigger();
 </script>
 </body>
 </html>
