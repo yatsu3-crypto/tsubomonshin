@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>円皮鍼 問診｜やまもと皮膚科・漢方クリニック</title>
+<title>円皮鍼 問診・同意書｜やまもと皮膚科・漢方クリニック</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;background:#f5f1ea;color:#2a2a2a;overscroll-behavior:none}
@@ -54,33 +54,58 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .summary-row:last-child{border-bottom:none}
 .summary-row .label{color:#666}
 .summary-row .value{font-weight:600;color:#3a2a1a}
-.consent{background:#fff8e8;border-radius:10px;padding:16px;margin:16px 0;font-size:14px;line-height:1.7}
-.consent label{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
-.consent input[type=checkbox]{width:22px;height:22px;flex-shrink:0;margin-top:2px}
+.consent-text{background:#fff8e8;border-radius:10px;padding:18px;margin:16px 0;font-size:14px;line-height:1.8}
+.consent-text h3{font-size:15px;color:#8a5a1a;margin-bottom:8px}
+.consent-text ul{padding-left:20px;margin-top:6px}
+.consent-text li{margin-bottom:4px}
 .empty{text-align:center;padding:40px 20px;color:#888}
 .step-indicator{display:flex;justify-content:center;gap:8px;margin-bottom:20px}
 .step-dot{width:10px;height:10px;border-radius:50%;background:#e0d4bc}
 .step-dot.active{background:#5a3a1a;width:30px;border-radius:5px}
-.complete-icon{font-size:64px;text-align:center;margin:20px 0}
+.complete-icon{font-size:64px;text-align:center;margin:20px 0;color:#5a8a3a}
 .tsubo-count{font-size:18px;color:#5a3a1a;text-align:center;margin:12px 0;font-weight:600}
 .tsubo-count .num{font-size:28px;color:#b8424a}
+.sign-area{background:#fff;border:2px dashed #c9a96e;border-radius:10px;padding:8px;margin:16px 0}
+.sign-canvas{width:100%;height:200px;background:#fffef8;border-radius:6px;display:block;touch-action:none;cursor:crosshair}
+.sign-hint{text-align:center;color:#aaa;font-size:13px;margin-top:6px}
+.sign-actions{display:flex;gap:8px;margin-top:8px}
+.sign-actions button{flex:1;padding:10px;border-radius:8px;background:#eee;color:#555;font-size:14px}
+.print-doc{display:none}
 @media print{
-  header,.btn,.btn-row,.step-indicator{display:none!important}
-  body{background:#fff}
-  .card{box-shadow:none;border:1px solid #ccc}
-  .screen{display:block!important}
-  .screen:not(.print-target){display:none!important}
+  @page{size:A4;margin:15mm}
+  body{background:#fff;color:#000;font-size:11pt}
+  .app{max-width:none;padding:0}
+  header,.btn,.btn-row,.step-indicator,.screen{display:none!important}
+  .print-doc{display:block!important}
+  .pd-header{text-align:center;margin-bottom:14pt}
+  .pd-title{font-size:18pt;font-weight:700;letter-spacing:.1em;border-bottom:2pt solid #000;padding-bottom:6pt;margin-bottom:4pt}
+  .pd-clinic{font-size:10pt;color:#444}
+  .pd-section{margin-bottom:10pt}
+  .pd-section h3{font-size:11pt;font-weight:700;border-left:3pt solid #000;padding-left:6pt;margin-bottom:6pt}
+  .pd-text{font-size:10.5pt;line-height:1.7;margin-bottom:6pt}
+  .pd-text ul{padding-left:18pt;margin-top:3pt}
+  .pd-text li{margin-bottom:2pt}
+  .pd-table{width:100%;border-collapse:collapse;margin-top:4pt;font-size:10.5pt}
+  .pd-table th,.pd-table td{border:1pt solid #555;padding:5pt 8pt;text-align:left}
+  .pd-table th{background:#f0e8d8;width:30%}
+  .pd-fill{display:flex;gap:20pt;margin-top:8pt}
+  .pd-fill-item{flex:1}
+  .pd-fill-label{font-size:9pt;color:#555;margin-bottom:2pt}
+  .pd-fill-line{border-bottom:1pt solid #000;height:24pt;padding-left:4pt;font-size:11pt}
+  .pd-sign-area{margin-top:12pt;border:1pt solid #000;padding:8pt}
+  .pd-sign-label{font-size:9pt;color:#555;margin-bottom:4pt}
+  .pd-sign-img{width:100%;height:80pt;display:block;object-fit:contain}
+  .pd-footer{margin-top:14pt;text-align:right;font-size:10pt}
 }
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <h1>円皮鍼（えんぴしん）問診</h1>
+  <h1>円皮鍼（えんぴしん）問診・同意</h1>
   <div class="sub">やまもと皮膚科・漢方クリニック</div>
 </header>
 
-<!-- 画面1: 説明・同意 -->
 <div class="screen active" id="screen-intro">
   <div class="card">
     <h2>円皮鍼について</h2>
@@ -92,29 +117,23 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
       ・自律神経の不調を感じる
     </div>
     <div class="notice">
-      <strong>ご注意</strong><br>
+      <strong>ご注意・リスク</strong><br>
       ・貼付期間は2〜3日が目安です<br>
       ・かぶれ・かゆみが出た場合はすぐにはがしてください<br>
       ・入浴は可能ですが、ゴシゴシこすらないでください<br>
-      ・金属アレルギーの方はお申し出ください
+      ・金属アレルギー、皮膚疾患のある部位には貼りません<br>
+      ・まれに発赤・痒み・小さな内出血が起こることがあります
     </div>
-    <div class="price">
-      自費 500円<small>（本数にかかわらず一律）</small>
-    </div>
+    <div class="price">材料費 500円<small>（本数にかかわらず一律／診察料とは別）</small></div>
   </div>
   <button class="btn btn-primary" onclick="go('symptom')">問診を始める</button>
 </div>
 
-<!-- 画面2: 症状選択 -->
 <div class="screen" id="screen-symptom">
-  <div class="step-indicator">
-    <div class="step-dot active"></div>
-    <div class="step-dot"></div>
-    <div class="step-dot"></div>
-  </div>
+  <div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div>
   <div class="card">
     <h2>気になる症状を選んでください</h2>
-    <p class="lead" style="font-size:15px;color:#666">複数選択できます（最大3つまでおすすめ）</p>
+    <p class="lead" style="font-size:15px;color:#666">複数選択できます（最大3つまで）</p>
     <div class="symptom-grid" id="symptom-grid"></div>
   </div>
   <div class="btn-row">
@@ -123,326 +142,329 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   </div>
 </div>
 
-<!-- 画面3: ツボ提案 -->
 <div class="screen" id="screen-result">
-  <div class="step-indicator">
-    <div class="step-dot"></div>
-    <div class="step-dot active"></div>
-    <div class="step-dot"></div>
-  </div>
+  <div class="step-indicator"><div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div>
   <div class="card">
     <h2>おすすめのツボ</h2>
-    <p class="lead" style="font-size:15px;color:#666">選んでいただいた症状にあわせて、ツボをお選びしました。スタッフが順に貼っていきます。</p>
+    <p class="lead" style="font-size:15px;color:#666">選んでいただいた症状にあわせて、ツボをお選びしました。</p>
     <div class="tsubo-count">合計 <span class="num" id="tsubo-num">0</span> 本</div>
     <div class="tsubo-list" id="tsubo-list"></div>
   </div>
   <div class="btn-row">
     <button class="btn btn-back" onclick="go('symptom')">戻る</button>
-    <button class="btn btn-primary" onclick="go('confirm')">次へ</button>
+    <button class="btn btn-primary" onclick="go('consent')">次へ（同意書へ）</button>
   </div>
 </div>
 
-<!-- 画面4: 最終確認 -->
-<div class="screen" id="screen-confirm">
-  <div class="step-indicator">
-    <div class="step-dot"></div>
-    <div class="step-dot"></div>
-    <div class="step-dot active"></div>
-  </div>
+<div class="screen" id="screen-consent">
+  <div class="step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div></div>
   <div class="card">
-    <h2>ご確認</h2>
-    <div class="summary-row"><span class="label">選択した症状</span><span class="value" id="cf-symptom"></span></div>
-    <div class="summary-row"><span class="label">貼付するツボ</span><span class="value" id="cf-tsubo"></span></div>
-    <div class="summary-row"><span class="label">本数</span><span class="value" id="cf-count"></span></div>
-    <div class="summary-row"><span class="label">料金（自費）</span><span class="value" style="color:#b8424a;font-size:20px">500円</span></div>
-    <div class="consent">
-      <label>
-        <input type="checkbox" id="consent-check" onchange="document.getElementById('btn-confirm').disabled=!this.checked">
-        <span>上記内容を確認し、円皮鍼の施術と500円の自費負担に同意します。施術後にかぶれ・かゆみが出た場合はクリニックに連絡することを了承します。</span>
-      </label>
+    <h2>円皮鍼施術 同意書</h2>
+    <div class="consent-text">
+      <h3>同意事項</h3>
+      私は、やまもと皮膚科・漢方クリニックにおいて円皮鍼の施術を受けるにあたり、以下の事項について説明を受け、理解したうえで同意します。
+      <ul>
+        <li>円皮鍼は皮膚に微小な鍼を貼付する施術であること</li>
+        <li>まれに発赤・かゆみ・かぶれ・小さな内出血が生じる可能性があること</li>
+        <li>異常を感じた場合はすぐに鍼をはがし、必要に応じてクリニックに連絡すること</li>
+        <li>本日の皮膚科診察料（保険診療）とは別途、円皮鍼の<strong>材料費として一律500円（税込）</strong>を支払うこと</li>
+        <li>貼付するツボの部位および本数は、当日の症状に応じて医師が決定すること</li>
+      </ul>
     </div>
+    <h3 style="font-size:16px;color:#5a3a1a;margin-top:20px;margin-bottom:8px">本日の施術内容</h3>
+    <div class="summary-row"><span class="label">症状</span><span class="value" id="cs-symptom"></span></div>
+    <div class="summary-row"><span class="label">材料費</span><span class="value" style="color:#b8424a;font-size:20px">500円</span></div>
+    <p style="font-size:13px;color:#888;margin-top:8px">※ 貼付するツボと本数は、医師が当日の状態に合わせて決定します。</p>
+    <h3 style="font-size:16px;color:#5a3a1a;margin-top:20px;margin-bottom:8px">ご署名</h3>
+    <p style="font-size:14px;color:#666">下の枠内に指でサインをお願いします。</p>
+    <div class="sign-area">
+      <canvas class="sign-canvas" id="sign-canvas"></canvas>
+      <div class="sign-hint">↑ ここに指で署名してください</div>
+      <div class="sign-actions"><button onclick="clearSign()">やり直し</button></div>
+    </div>
+    <p style="font-size:13px;color:#888;margin-top:10px">※ 氏名・カルテ番号は印刷後にスタッフが記入します。</p>
   </div>
   <div class="btn-row">
     <button class="btn btn-back" onclick="go('result')">戻る</button>
-    <button class="btn btn-primary" id="btn-confirm" onclick="go('done')" disabled>同意して進む</button>
+    <button class="btn btn-primary" id="btn-to-done" onclick="goDone()" disabled>同意して次へ</button>
   </div>
 </div>
 
-<!-- 画面5: 完了 -->
-<div class="screen print-target" id="screen-done">
+<div class="screen" id="screen-done">
+  <div class="step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div></div>
   <div class="card">
     <div class="complete-icon">✓</div>
-    <h2 style="text-align:center;border:none">受付完了</h2>
-    <p class="lead" style="text-align:center">スタッフがツボに円皮鍼を貼ります。<br>このまま少々お待ちください。</p>
+    <h2 style="text-align:center;border:none">同意ありがとうございました</h2>
+    <p class="lead" style="text-align:center">「同意書を印刷」ボタンを押して、印刷された用紙をスタッフにお渡しください。<br>その後、ツボに円皮鍼を貼ります。</p>
     <div style="background:#f5f1ea;border-radius:10px;padding:16px;margin-top:16px">
       <div style="font-weight:600;color:#5a3a1a;margin-bottom:8px">スタッフ確認用</div>
       <div id="done-summary" style="font-size:15px;line-height:1.8"></div>
     </div>
   </div>
-  <button class="btn btn-secondary" onclick="window.print()">印刷</button>
-  <button class="btn btn-primary" onclick="reset()">最初に戻る</button>
+  <button class="btn btn-primary" onclick="window.print()">同意書を印刷</button>
+  <button class="btn btn-secondary" onclick="reset()">最初に戻る</button>
+</div>
+
+<div class="print-doc" id="print-doc">
+  <div class="pd-header">
+    <div class="pd-title">円 皮 鍼 施 術 同 意 書</div>
+    <div class="pd-clinic">やまもと皮膚科・漢方クリニック</div>
+  </div>
+  <div class="pd-section">
+    <div class="pd-text">
+      私は、やまもと皮膚科・漢方クリニックにおいて円皮鍼の施術を受けるにあたり、以下の事項について説明を受け、内容を理解したうえで同意します。
+      <ul>
+        <li>円皮鍼は皮膚に微小な鍼を貼付する施術であること。</li>
+        <li>まれに発赤・かゆみ・かぶれ・小さな内出血が生じる可能性があること。</li>
+        <li>異常を感じた場合はすぐに鍼をはがし、必要に応じて当院に連絡すること。</li>
+        <li>本日の皮膚科診察料（保険診療）とは別途、円皮鍼の<strong>材料費として一律500円（税込）</strong>を支払うこと。</li>
+        <li>貼付するツボの部位および本数は、当日の症状に応じて医師が決定すること。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pd-section">
+    <h3>本日の施術内容</h3>
+    <table class="pd-table">
+      <tr><th>受付日時</th><td id="pd-datetime"></td></tr>
+      <tr><th>症状</th><td id="pd-symptom"></td></tr>
+      <tr><th>材料費</th><td>500円（税込）　※診察料とは別</td></tr>
+    </table>
+  </div>
+  <div class="pd-section">
+    <div class="pd-fill">
+      <div class="pd-fill-item"><div class="pd-fill-label">カルテ番号</div><div class="pd-fill-line"></div></div>
+      <div class="pd-fill-item"><div class="pd-fill-label">患者氏名</div><div class="pd-fill-line"></div></div>
+    </div>
+  </div>
+  <div class="pd-section">
+    <div class="pd-sign-area">
+      <div class="pd-sign-label">ご署名</div>
+      <img class="pd-sign-img" id="pd-sign-img" alt="signature">
+    </div>
+  </div>
+  <div class="pd-footer" id="pd-footer"></div>
 </div>
 
 </div>
 
 <script>
-// ========== データ定義 ==========
-// 症状 → ツボの推奨マッピング
-// priority: 数字が小さいほど優先（必須に近い）
 const SYMPTOMS = [
-  {id:'shoulder', label:'肩こり・首こり', icon:'💆',
-    tsubo:[
-      {code:'GB21', name:'肩井', priority:1, bilateral:true, reason:'肩こりの代表穴'},
-      {code:'BL10', name:'天柱', priority:2, bilateral:true, reason:'首のこりに'},
-      {code:'LI4',  name:'合谷', priority:3, bilateral:false, reason:'上半身の万能穴'}
-    ]},
-  {id:'lowback', label:'腰痛', icon:'🦴',
-    tsubo:[
-      {code:'BL23', name:'腎兪', priority:1, bilateral:true, reason:'腰痛の基本穴'},
-      {code:'BL25', name:'大腸兪', priority:2, bilateral:true, reason:'下部腰痛に'},
-      {code:'BL40', name:'委中', priority:3, bilateral:false, reason:'腰背部痛の要穴'}
-    ]},
-  {id:'headache', label:'頭痛', icon:'🤕',
-    tsubo:[
-      {code:'EX-HN5', name:'太陽', priority:1, bilateral:true, reason:'こめかみの頭痛'},
-      {code:'GB20', name:'風池', priority:2, bilateral:true, reason:'後頭部の頭痛'},
-      {code:'LI4',  name:'合谷', priority:3, bilateral:false, reason:'頭痛の万能穴'}
-    ]},
-  {id:'eye', label:'眼精疲労', icon:'👁️',
-    tsubo:[
-      {code:'BL2',  name:'攅竹', priority:1, bilateral:true, reason:'眉頭の疲れ目穴'},
-      {code:'EX-HN5', name:'太陽', priority:2, bilateral:true, reason:'こめかみの疲労に'},
-      {code:'GB20', name:'風池', priority:3, bilateral:true, reason:'目の奥の疲れに'}
-    ]},
-  {id:'sleep', label:'不眠・ストレス', icon:'😴',
-    tsubo:[
-      {code:'HT7',  name:'神門', priority:1, bilateral:false, reason:'安神の代表穴'},
-      {code:'GV20', name:'百会', priority:2, bilateral:false, reason:'頭頂の鎮静穴'},
-      {code:'PC6',  name:'内関', priority:3, bilateral:false, reason:'動悸・不安に'}
-    ]},
-  {id:'cold', label:'冷え', icon:'❄️',
-    tsubo:[
-      {code:'SP6',  name:'三陰交', priority:1, bilateral:true, reason:'婦人科・冷えの要穴'},
-      {code:'CV4',  name:'関元', priority:2, bilateral:false, reason:'下腹部の冷えに'},
-      {code:'LR3',  name:'太衝', priority:3, bilateral:false, reason:'足先の冷えに'}
-    ]},
-  {id:'stomach', label:'胃腸不調', icon:'🫃',
-    tsubo:[
-      {code:'ST36', name:'足三里', priority:1, bilateral:true, reason:'胃腸の代表穴'},
-      {code:'CV12', name:'中脘', priority:2, bilateral:false, reason:'胃部の不快感に'},
-      {code:'PC6',  name:'内関', priority:3, bilateral:false, reason:'吐き気・むかつきに'}
-    ]},
-  {id:'dizzy', label:'めまい・ふらつき', icon:'💫',
-    tsubo:[
-      {code:'GV20', name:'百会', priority:1, bilateral:false, reason:'めまいの要穴'},
-      {code:'GB20', name:'風池', priority:2, bilateral:true, reason:'頸性めまいに'},
-      {code:'PC6',  name:'内関', priority:3, bilateral:false, reason:'乗り物酔い様症状に'}
-    ]},
-  {id:'menses', label:'月経不順・PMS', icon:'🌸',
-    tsubo:[
-      {code:'SP6',  name:'三陰交', priority:1, bilateral:true, reason:'婦人科の要穴'},
-      {code:'CV4',  name:'関元', priority:2, bilateral:false, reason:'生理痛・冷えに'},
-      {code:'SP10', name:'血海', priority:3, bilateral:true, reason:'血の道症に'}
-    ]},
-  {id:'knee', label:'膝の痛み', icon:'🦵',
-    tsubo:[
-      {code:'EX-LE5', name:'内・外膝眼', priority:1, bilateral:true, reason:'膝関節の局所穴'},
-      {code:'ST36', name:'足三里', priority:2, bilateral:true, reason:'下肢の代表穴'},
-      {code:'SP10', name:'血海', priority:3, bilateral:true, reason:'膝内側の痛みに'}
-    ]},
-  {id:'nose', label:'鼻づまり・花粉症', icon:'🤧',
-    tsubo:[
-      {code:'LI20', name:'迎香', priority:1, bilateral:true, reason:'鼻づまりの特効穴'},
-      {code:'EX-HN3', name:'印堂', priority:2, bilateral:false, reason:'眉間の通鼻穴'},
-      {code:'LI4',  name:'合谷', priority:3, bilateral:false, reason:'鼻症状の遠隔穴'}
-    ]}
+  {id:'shoulder',label:'肩こり・首こり',icon:'💆',tsubo:[
+    {code:'GB21',name:'肩井',priority:1,bilateral:true,reason:'肩こりの代表穴'},
+    {code:'BL10',name:'天柱',priority:2,bilateral:true,reason:'首のこりに'},
+    {code:'LI4',name:'合谷',priority:3,bilateral:false,reason:'上半身の万能穴'}
+  ]},
+  {id:'lowback',label:'腰痛',icon:'🦴',tsubo:[
+    {code:'BL23',name:'腎兪',priority:1,bilateral:true,reason:'腰痛の基本穴'},
+    {code:'BL25',name:'大腸兪',priority:2,bilateral:true,reason:'下部腰痛に'},
+    {code:'BL40',name:'委中',priority:3,bilateral:false,reason:'腰背部痛の要穴'}
+  ]},
+  {id:'headache',label:'頭痛',icon:'🤕',tsubo:[
+    {code:'EX-HN5',name:'太陽',priority:1,bilateral:true,reason:'こめかみの頭痛'},
+    {code:'GB20',name:'風池',priority:2,bilateral:true,reason:'後頭部の頭痛'},
+    {code:'LI4',name:'合谷',priority:3,bilateral:false,reason:'頭痛の万能穴'}
+  ]},
+  {id:'eye',label:'眼精疲労',icon:'👁️',tsubo:[
+    {code:'BL2',name:'攅竹',priority:1,bilateral:true,reason:'眉頭の疲れ目穴'},
+    {code:'EX-HN5',name:'太陽',priority:2,bilateral:true,reason:'こめかみの疲労に'},
+    {code:'GB20',name:'風池',priority:3,bilateral:true,reason:'目の奥の疲れに'}
+  ]},
+  {id:'sleep',label:'不眠・ストレス',icon:'😴',tsubo:[
+    {code:'HT7',name:'神門',priority:1,bilateral:false,reason:'安神の代表穴'},
+    {code:'GV20',name:'百会',priority:2,bilateral:false,reason:'頭頂の鎮静穴'},
+    {code:'PC6',name:'内関',priority:3,bilateral:false,reason:'動悸・不安に'}
+  ]},
+  {id:'cold',label:'冷え',icon:'❄️',tsubo:[
+    {code:'SP6',name:'三陰交',priority:1,bilateral:true,reason:'婦人科・冷えの要穴'},
+    {code:'CV4',name:'関元',priority:2,bilateral:false,reason:'下腹部の冷えに'},
+    {code:'LR3',name:'太衝',priority:3,bilateral:false,reason:'足先の冷えに'}
+  ]},
+  {id:'stomach',label:'胃腸不調',icon:'🫃',tsubo:[
+    {code:'ST36',name:'足三里',priority:1,bilateral:true,reason:'胃腸の代表穴'},
+    {code:'CV12',name:'中脘',priority:2,bilateral:false,reason:'胃部の不快感に'},
+    {code:'PC6',name:'内関',priority:3,bilateral:false,reason:'吐き気・むかつきに'}
+  ]},
+  {id:'dizzy',label:'めまい・ふらつき',icon:'💫',tsubo:[
+    {code:'GV20',name:'百会',priority:1,bilateral:false,reason:'めまいの要穴'},
+    {code:'GB20',name:'風池',priority:2,bilateral:true,reason:'頸性めまいに'},
+    {code:'PC6',name:'内関',priority:3,bilateral:false,reason:'乗り物酔い様症状に'}
+  ]},
+  {id:'menses',label:'月経不順・PMS',icon:'🌸',tsubo:[
+    {code:'SP6',name:'三陰交',priority:1,bilateral:true,reason:'婦人科の要穴'},
+    {code:'CV4',name:'関元',priority:2,bilateral:false,reason:'生理痛・冷えに'},
+    {code:'SP10',name:'血海',priority:3,bilateral:true,reason:'血の道症に'}
+  ]},
+  {id:'knee',label:'膝の痛み',icon:'🦵',tsubo:[
+    {code:'EX-LE5',name:'内・外膝眼',priority:1,bilateral:true,reason:'膝関節の局所穴'},
+    {code:'ST36',name:'足三里',priority:2,bilateral:true,reason:'下肢の代表穴'},
+    {code:'SP10',name:'血海',priority:3,bilateral:true,reason:'膝内側の痛みに'}
+  ]},
+  {id:'nose',label:'鼻づまり・花粉症',icon:'🤧',tsubo:[
+    {code:'LI20',name:'迎香',priority:1,bilateral:true,reason:'鼻づまりの特効穴'},
+    {code:'EX-HN3',name:'印堂',priority:2,bilateral:false,reason:'眉間の通鼻穴'},
+    {code:'LI4',name:'合谷',priority:3,bilateral:false,reason:'鼻症状の遠隔穴'}
+  ]}
 ];
 
-// 設定
-const MAX_TSUBO = 8;        // 1回あたり最大本数
-const MIN_TSUBO = 2;        // 最小本数
-const MAX_SYMPTOMS = 3;     // 同時選択推奨上限
-const IMG_PATH = '../tsubo/images/'; // tsubo/ アプリの画像を流用（同階層に配置するなら 'images/' に変更）
+const MAX_TSUBO=8, MAX_SYMPTOMS=3, IMG_PATH='../tsubo/images/';
+let state={selectedSymptoms:[],proposedTsubo:[],signatureDataUrl:null,receivedAt:null};
 
-// ========== 状態 ==========
-let state = {
-  selectedSymptoms: [],
-  proposedTsubo: [],   // [{code,name,reason,bilateral,count,removed}]
-};
-
-// ========== 画面遷移 ==========
 function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   window.scrollTo(0,0);
-  if(name==='confirm') renderConfirm();
-  if(name==='done') renderDone();
+  if(name==='consent') initConsent();
+}
+function goResult(){computeTsubo();renderTsuboList();go('result');}
+function goDone(){
+  state.signatureDataUrl=signCanvas.toDataURL('image/png');
+  state.receivedAt=new Date();
+  renderDone();renderPrintDoc();go('done');
 }
 
-function goResult(){
-  computeTsubo();
-  renderTsuboList();
-  go('result');
-}
-
-// ========== 症状選択画面 ==========
 function renderSymptomGrid(){
-  const grid = document.getElementById('symptom-grid');
-  grid.innerHTML = SYMPTOMS.map(s=>`
+  document.getElementById('symptom-grid').innerHTML=SYMPTOMS.map(s=>`
     <button class="symptom" data-id="${s.id}" onclick="toggleSymptom('${s.id}')">
-      <span class="icon">${s.icon}</span>
-      <span>${s.label}</span>
-      <span class="check">✓</span>
-    </button>
-  `).join('');
+      <span class="icon">${s.icon}</span><span>${s.label}</span><span class="check">✓</span>
+    </button>`).join('');
 }
-
 function toggleSymptom(id){
-  const i = state.selectedSymptoms.indexOf(id);
-  if(i>=0){
-    state.selectedSymptoms.splice(i,1);
-  } else {
-    if(state.selectedSymptoms.length >= MAX_SYMPTOMS){
-      alert(`同時に選べるのは${MAX_SYMPTOMS}つまでです。一番気になる症状をお選びください。`);
-      return;
-    }
+  const i=state.selectedSymptoms.indexOf(id);
+  if(i>=0) state.selectedSymptoms.splice(i,1);
+  else{
+    if(state.selectedSymptoms.length>=MAX_SYMPTOMS){alert(`同時に選べるのは${MAX_SYMPTOMS}つまでです。`);return;}
     state.selectedSymptoms.push(id);
   }
-  document.querySelectorAll('.symptom').forEach(el=>{
-    el.classList.toggle('selected', state.selectedSymptoms.includes(el.dataset.id));
-  });
-  document.getElementById('btn-to-result').disabled = state.selectedSymptoms.length===0;
+  document.querySelectorAll('.symptom').forEach(el=>el.classList.toggle('selected',state.selectedSymptoms.includes(el.dataset.id)));
+  document.getElementById('btn-to-result').disabled=state.selectedSymptoms.length===0;
 }
 
-// ========== ツボ計算ロジック ==========
 function computeTsubo(){
-  // 選択された症状から、優先度順にツボを集める
-  // 同じツボが複数症状で出てきたら統合し、reasonを併記
-  const map = new Map(); // code → {code,name,bilateral,priority(min),reasons[],symptoms[]}
-
+  const map=new Map();
   state.selectedSymptoms.forEach(sid=>{
-    const sym = SYMPTOMS.find(x=>x.id===sid);
+    const sym=SYMPTOMS.find(x=>x.id===sid);
     sym.tsubo.forEach(t=>{
       if(map.has(t.code)){
-        const exist = map.get(t.code);
-        exist.priority = Math.min(exist.priority, t.priority);
-        if(!exist.reasons.includes(t.reason)) exist.reasons.push(t.reason);
-        if(!exist.symptoms.includes(sym.label)) exist.symptoms.push(sym.label);
-      } else {
-        map.set(t.code, {
-          code: t.code, name: t.name, bilateral: t.bilateral,
-          priority: t.priority,
-          reasons: [t.reason],
-          symptoms: [sym.label]
-        });
-      }
+        const e=map.get(t.code);
+        e.priority=Math.min(e.priority,t.priority);
+        if(!e.reasons.includes(t.reason)) e.reasons.push(t.reason);
+        if(!e.symptoms.includes(sym.label)) e.symptoms.push(sym.label);
+      } else map.set(t.code,{code:t.code,name:t.name,bilateral:t.bilateral,priority:t.priority,reasons:[t.reason],symptoms:[sym.label]});
     });
   });
-
-  // 優先度順にソート（共通ツボを優先＝複数症状で出現したものを優先）
-  let candidates = [...map.values()].sort((a,b)=>{
-    // 1. 複数症状にまたがるツボを優先
-    if(a.symptoms.length !== b.symptoms.length) return b.symptoms.length - a.symptoms.length;
-    // 2. priorityが小さい（必須度高い）を優先
-    return a.priority - b.priority;
+  let candidates=[...map.values()].sort((a,b)=>{
+    if(a.symptoms.length!==b.symptoms.length) return b.symptoms.length-a.symptoms.length;
+    return a.priority-b.priority;
   });
-
-  // 本数を計算しながら採用（左右ありは2本、片側のみは1本）
-  // 合計が MAX_TSUBO を超えないようにする
-  const proposed = [];
-  let total = 0;
+  const proposed=[];let total=0;
   for(const c of candidates){
-    const need = c.bilateral ? 2 : 1;
-    if(total + need > MAX_TSUBO) {
-      // 残り1本枠で片側のみ可能なツボがあれば追加
-      if(MAX_TSUBO - total >= 1 && !c.bilateral){
-        proposed.push({...c, count:1, removed:false});
-        total += 1;
-      }
+    const need=c.bilateral?2:1;
+    if(total+need>MAX_TSUBO){
+      if(MAX_TSUBO-total>=1&&!c.bilateral){proposed.push({...c,count:1,removed:false});total+=1;}
       continue;
     }
-    proposed.push({...c, count: need, removed:false});
-    total += need;
+    proposed.push({...c,count:need,removed:false});total+=need;
   }
-
-  // 最低本数を満たさない場合（症状0など）の保険
-  if(proposed.length === 0){
-    // 症状未選択は通常起きないが念のため
-  }
-
-  state.proposedTsubo = proposed;
+  state.proposedTsubo=proposed;
 }
 
-// ========== ツボ表示 ==========
 function renderTsuboList(){
-  const list = document.getElementById('tsubo-list');
-  if(state.proposedTsubo.length === 0){
-    list.innerHTML = '<div class="empty">ツボが選定できませんでした。戻って症状を選び直してください。</div>';
-    return;
-  }
-  list.innerHTML = state.proposedTsubo.map((t,idx)=>`
+  const list=document.getElementById('tsubo-list');
+  if(state.proposedTsubo.length===0){list.innerHTML='<div class="empty">ツボが選定できませんでした。戻って症状を選び直してください。</div>';return;}
+  list.innerHTML=state.proposedTsubo.map((t,idx)=>`
     <div class="tsubo ${t.removed?'removed':''}" data-idx="${idx}">
       <div class="img-wrap">
-        <img src="${IMG_PATH}${t.code}.png" alt="${t.name}"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <img src="${IMG_PATH}${t.code}.png" alt="${t.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <div class="placeholder" style="display:none">${t.code}<br>${t.name}</div>
       </div>
       <div class="name">${t.name}</div>
       <div class="code">${t.code}${t.bilateral?' (左右)':''} × ${t.count}本</div>
       <div class="reason">${t.reasons.join('・')}</div>
       <button class="toggle" onclick="toggleTsubo(${idx})">${t.removed?'追加する':'はずす'}</button>
-    </div>
-  `).join('');
+    </div>`).join('');
   updateTsuboCount();
 }
-
-function toggleTsubo(idx){
-  state.proposedTsubo[idx].removed = !state.proposedTsubo[idx].removed;
-  renderTsuboList();
-}
-
+function toggleTsubo(idx){state.proposedTsubo[idx].removed=!state.proposedTsubo[idx].removed;renderTsuboList();}
 function updateTsuboCount(){
-  const total = state.proposedTsubo.filter(t=>!t.removed).reduce((s,t)=>s+t.count,0);
-  document.getElementById('tsubo-num').textContent = total;
+  const total=state.proposedTsubo.filter(t=>!t.removed).reduce((s,t)=>s+t.count,0);
+  document.getElementById('tsubo-num').textContent=total;
 }
 
-// ========== 確認画面 ==========
-function renderConfirm(){
-  const symLabels = state.selectedSymptoms.map(id=>SYMPTOMS.find(s=>s.id===id).label).join('、');
-  const active = state.proposedTsubo.filter(t=>!t.removed);
-  const tsuboNames = active.map(t=>`${t.name}${t.bilateral?'(左右)':''}`).join('、');
-  const total = active.reduce((s,t)=>s+t.count,0);
-  document.getElementById('cf-symptom').textContent = symLabels || '—';
-  document.getElementById('cf-tsubo').textContent = tsuboNames || '—';
-  document.getElementById('cf-count').textContent = total + '本';
-  document.getElementById('consent-check').checked = false;
-  document.getElementById('btn-confirm').disabled = true;
+function initConsent(){
+  const symLabels=state.selectedSymptoms.map(id=>SYMPTOMS.find(s=>s.id===id).label).join('、');
+  document.getElementById('cs-symptom').textContent=symLabels||'—';
+  setupSignCanvas();
+  document.getElementById('btn-to-done').disabled=true;
 }
 
-// ========== 完了画面 ==========
+let signCanvas,signCtx,signing=false,signHasInk=false;
+function setupSignCanvas(){
+  signCanvas=document.getElementById('sign-canvas');
+  signCtx=signCanvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const rect=signCanvas.getBoundingClientRect();
+  signCanvas.width=rect.width*dpr;
+  signCanvas.height=rect.height*dpr;
+  signCtx.scale(dpr,dpr);
+  signCtx.fillStyle='#fffef8';
+  signCtx.fillRect(0,0,rect.width,rect.height);
+  signCtx.strokeStyle='#1a1a3a';
+  signCtx.lineWidth=2.5;
+  signCtx.lineCap='round';
+  signCtx.lineJoin='round';
+  signHasInk=false;
+  document.getElementById('btn-to-done').disabled=true;
+  const getPos=(e)=>{
+    const rect=signCanvas.getBoundingClientRect();
+    const t=e.touches?e.touches[0]:e;
+    return {x:t.clientX-rect.left,y:t.clientY-rect.top};
+  };
+  const start=(e)=>{e.preventDefault();signing=true;const p=getPos(e);signCtx.beginPath();signCtx.moveTo(p.x,p.y);};
+  const move=(e)=>{if(!signing)return;e.preventDefault();const p=getPos(e);signCtx.lineTo(p.x,p.y);signCtx.stroke();signHasInk=true;document.getElementById('btn-to-done').disabled=false;};
+  const end=(e)=>{e.preventDefault();signing=false;};
+  signCanvas.ontouchstart=start;signCanvas.ontouchmove=move;signCanvas.ontouchend=end;
+  signCanvas.onmousedown=start;signCanvas.onmousemove=move;signCanvas.onmouseup=end;signCanvas.onmouseleave=end;
+}
+function clearSign(){
+  if(!signCanvas)return;
+  const rect=signCanvas.getBoundingClientRect();
+  signCtx.fillStyle='#fffef8';
+  signCtx.fillRect(0,0,rect.width,rect.height);
+  signHasInk=false;
+  document.getElementById('btn-to-done').disabled=true;
+}
+
 function renderDone(){
-  const symLabels = state.selectedSymptoms.map(id=>SYMPTOMS.find(s=>s.id===id).label).join('、');
-  const active = state.proposedTsubo.filter(t=>!t.removed);
-  const total = active.reduce((s,t)=>s+t.count,0);
-  const now = new Date();
-  const ts = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  document.getElementById('done-summary').innerHTML = `
-    <div>受付日時: ${ts}</div>
+  const symLabels=state.selectedSymptoms.map(id=>SYMPTOMS.find(s=>s.id===id).label).join('、');
+  const active=state.proposedTsubo.filter(t=>!t.removed);
+  const total=active.reduce((s,t)=>s+t.count,0);
+  document.getElementById('done-summary').innerHTML=`
+    <div>受付日時: ${formatDate(state.receivedAt)}</div>
     <div>症状: ${symLabels}</div>
     <div>ツボ: ${active.map(t=>`${t.name}(${t.code})${t.bilateral?'×2':'×1'}`).join(' / ')}</div>
-    <div style="font-weight:600;margin-top:6px">合計 ${total}本 ／ 自費 500円</div>
-  `;
+    <div style="font-weight:600;margin-top:6px">合計 ${total}本 ／ 材料費 500円</div>`;
 }
 
-// ========== リセット ==========
+function renderPrintDoc(){
+  const symLabels=state.selectedSymptoms.map(id=>SYMPTOMS.find(s=>s.id===id).label).join('、');
+  document.getElementById('pd-datetime').textContent=formatDate(state.receivedAt);
+  document.getElementById('pd-symptom').textContent=symLabels;
+  document.getElementById('pd-sign-img').src=state.signatureDataUrl||'';
+  document.getElementById('pd-footer').textContent=`発行: ${formatDate(state.receivedAt)} ／ やまもと皮膚科・漢方クリニック`;
+}
+
+function formatDate(d){
+  if(!d)d=new Date();
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
 function reset(){
-  state = {selectedSymptoms:[], proposedTsubo:[]};
+  state={selectedSymptoms:[],proposedTsubo:[],signatureDataUrl:null,receivedAt:null};
   document.querySelectorAll('.symptom').forEach(el=>el.classList.remove('selected'));
-  document.getElementById('btn-to-result').disabled = true;
+  document.getElementById('btn-to-result').disabled=true;
   go('intro');
 }
 
-// ========== 初期化 ==========
 renderSymptomGrid();
 </script>
 </body>
