@@ -98,11 +98,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   body{background:#fff;color:#000;font-size:11pt}
   .app{max-width:none;padding:0}
   header,.btn,.btn-row,.step-indicator,.screen{display:none!important}
-  /* プレビュー画面の中身は印刷時に表示するが、上部の操作バーは隠す */
-  #screen-preview{display:block!important;position:static!important}
-  #screen-preview > div:first-child{display:none!important}
-  #preview-doc{margin:0!important;padding:0!important;background:#fff!important;border-radius:0!important}
+  /* デフォルト：直接印刷時はprint-docのみ表示 */
   .print-doc{display:block!important}
+  /* プレビュー画面表示中の場合（body.printing-previewが付与される）：
+     プレビューの中身を印刷、print-docは非表示 */
+  body.printing-preview #screen-preview{display:block!important;position:static!important}
+  body.printing-preview #screen-preview > div:first-child{display:none!important}
+  body.printing-preview #preview-doc{margin:0!important;padding:0!important;background:#fff!important;border-radius:0!important}
+  body.printing-preview .print-doc{display:none!important}
   .pd-header{text-align:center;margin-bottom:14pt}
   .pd-title{font-size:18pt;font-weight:700;letter-spacing:.1em;border-bottom:2pt solid #000;padding-bottom:6pt;margin-bottom:4pt}
   .pd-clinic{font-size:10pt;color:#444}
@@ -359,6 +362,12 @@ let state={selectedSymptoms:[],proposedTsubo:[],signatureDataUrl:null,receivedAt
 function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
+  // プレビュー画面表示中は body にマーカークラスを付与（印刷制御用）
+  if(name === 'preview'){
+    document.body.classList.add('printing-preview');
+  } else {
+    document.body.classList.remove('printing-preview');
+  }
   window.scrollTo(0,0);
   if(name==='consent') initConsent();
 }
